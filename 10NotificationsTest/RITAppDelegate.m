@@ -7,6 +7,12 @@
 //
 
 #import "RITAppDelegate.h"
+#import "RITGovernment.h"
+#import "RITDoctor.h"
+
+@interface RITAppDelegate ()
+@property (strong, nonatomic) RITGovernment* government;
+@end
 
 @implementation RITAppDelegate
 
@@ -16,7 +22,45 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(governmentNotification:)
+                                                 name:RITGovernmentTaxLevelDidChangeNotification
+                                               object:nil];
+    
+    self.government  = [[RITGovernment alloc] init];
+    
+    RITDoctor* doctor01 = [[RITDoctor alloc] init];
+    RITDoctor* doctor02 = [[RITDoctor alloc] init];
+    RITDoctor* doctor03 = [[RITDoctor alloc] init];
+    RITDoctor* doctor04 = [[RITDoctor alloc] init];
+    RITDoctor* doctor05 = [[RITDoctor alloc] init];
+    
+    doctor01.salary = doctor02.salary = doctor03.salary = doctor04.salary = doctor05.salary = self.government.salary;
+    
+    self.government.taxLevel        = 5.5f;
+    self.government.salary          = 1100;
+    self.government.averagePrice    = 15;
+    self.government.pension         = 550;
+    
+    self.government.salary          = 1050;
+    
+    self.government.salary          = 1150;
+    
+    self.government.salary          = 900;
+    
     return YES;
+}
+
+- (void) governmentNotification: (NSNotification*) notification {
+    
+    //NSLog(@"governmentNotification userInfo = %@", notification.userInfo);
+    
+}
+
+- (void) dealloc {
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:RITGovernmentTaxLevelDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
